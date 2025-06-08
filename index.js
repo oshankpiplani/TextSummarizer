@@ -1,4 +1,3 @@
-// Constants
 const workerUrl = 'https://worker.oshank-app.workers.dev'
 const feedbackDisplayTime = 3000
 
@@ -33,32 +32,31 @@ async function summarize() {
   try {
     const summaryLength = summaryLengthInput.value
     const text = textInputArea.value
-    const messages = [
-      {
-        'role': 'user',
-        'content': [
-          {
-            'type': 'text',
-            'text': `Summarize this text. Limit the summary length to ${summaryLength} words: ${text}`
-          }
-        ]
-      }
-    ]
+    
+    // Updated to send simple object instead of messages array
+    const requestBody = {
+      text: `Summarize this text. Limit the summary length to ${summaryLength} words: ${text}`
+    }
+    
     const options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(messages)
+      body: JSON.stringify(requestBody)
     }
+    
     startLoading()
     const response = await fetch(workerUrl, options)
     endLoading()
-    const summary = await response.json()
+    const result = await response.json()
+    
     if (!response.ok) {
-      throw new Error(summary.error)
+      throw new Error(result.error || 'An error occurred')
     }
-    summaryOutputArea.value = summary
+    
+    // Backend now returns { summary: "..." }
+    summaryOutputArea.value = result.summary
     enableSummayOutputArea()
     enableCopyButton()
     focusOnCopyButton()
@@ -128,7 +126,7 @@ function disableAllControls() {
   disableSummarizeButton()
   disableSummaryOutputArea()
   disbaleClearButton()
-  disableCopyButton()
+  disbaleCopyButton()
 }
 
 function startLoading() {
@@ -216,7 +214,7 @@ function enableSummayOutputArea() {
   summaryOutputArea.disabled = false
 }
 
-function disableCopyButton() {
+function disbaleCopyButton() {
   copyButton.disabled = true
 }
 
