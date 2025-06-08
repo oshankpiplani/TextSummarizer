@@ -1,5 +1,5 @@
 // Constants
-const workerUrl = 'https://worker.shant.workers.dev/'
+const workerUrl = 'https://worker.oshank-app.workers.dev'
 const feedbackDisplayTime = 3000
 
 // Element Selectors
